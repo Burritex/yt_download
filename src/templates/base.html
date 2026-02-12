@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://static-cdn.jtvnw.net/jtv_user_pictures/f4b12683-57ff-4b57-926a-67512b43a7ff-profile_image-300x300.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block config %}
+    {% endblock %}
+</head>
+<body>
+    <main>
+        {% block mainBody %}
+        {% endblock %}
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+</html>
