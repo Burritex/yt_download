@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block config %}
+{% endblock %}
+
+{% block mainBody %}
+    {% if resp.status is false %}
+    <span>{{ resp.error_msg }}</span>
+    {% else %}
+        <h2>'<i>{{ resp.name }}</i>' -> is ready for download!</h2>
+    {% endif %}
+
+
+    {% if resp.status is not false %}
+    <form action="" method="post">
+        <button>Download</button>
+    </form>
+    {% endif %}
+
+    <a href="{{ url_for('app_routes.pg_inicial') }}">
+        Voltar
+    </a>
+{% endblock %}
