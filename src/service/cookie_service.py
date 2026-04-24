@@ -20,7 +20,7 @@ class CookieService:
 
 
     def set(self, midia_request: dict) -> Response:
-        cookie = make_response(redirect("/resp"))
+        cookie = make_response(redirect("/review"))
         if midia_request.get("status"):
             cookie.set_cookie("name", str(midia_request['name']), **self.cookie_config)
             cookie.set_cookie("midia_format", str(midia_request['midia_format'].value), **self.cookie_config)

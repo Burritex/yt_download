@@ -4,20 +4,27 @@
 {% endblock %}
 
 {% block mainBody %}
-    {% if resp.status is false %}
-    <span>{{ resp.error_msg }}</span>
-    {% else %}
-        <h2>'<i>{{ resp.name }}</i>' -> is ready for download!</h2>
-    {% endif %}
+    <form action="" method="post" id="respForm">
 
+        <h2>Midia encontrada!</h2>
 
-    {% if resp.status is not false %}
-    <form action="" method="post">
-        <button>Download</button>
+        <Span>
+            <input type="checkbox" name="cbAlterar" id="ckbxAlterar">
+            <label for="ckbxAlterar">Deseja Alterar as informações?</label>
+        </Span>
+
+        <fieldset>
+            <label for="inpNomeMidia">Nome:</label>
+            <input type="text" name="inpNome" id="inpNomeMidia" value="{{ resp.name }}">
+
+            <label for="inpArtistaMidia">Artista:</label>
+            <input type="text" name="inpArtista" id="inpArtistaMidia">
+        </fieldset>
+
+        <a href="{{ url_for('app_routes.pg_inicial') }}">
+            Voltar
+        </a>
+        <button type="submit">Baixar</button>
     </form>
-    {% endif %}
-
-    <a href="{{ url_for('app_routes.pg_inicial') }}">
-        Voltar
-    </a>
+    <script src="{{ url_for('static', filename='pgResposta_script.js') }}" defer></script>
 {% endblock %}

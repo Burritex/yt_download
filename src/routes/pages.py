@@ -19,7 +19,7 @@ def pg_inicial():
         ok, data = process_form()
 
         if not ok:
-            return render_template("pg_resposta.html", resp={
+            return render_template("pg_download.html", resp={
                 "error_msg": data,
                 "status": False
             })
@@ -28,7 +28,7 @@ def pg_inicial():
         request_result = controller(midia, url)
 
         if not request_result.status:
-            return render_template("pg_resposta.html", resp={
+            return render_template("pg_download.html", resp={
                 "error_msg": request_result.error_msg,
                 "status": request_result.status
             })
@@ -51,7 +51,7 @@ def pg_resp():
         return redirect("/")
 
     if request.method == 'GET':
-        return render_template("pg_resposta.html", resp=cookies)
+        return render_template("pg_download.html", resp=cookies)
     
     elif request.method == 'POST':
         if cookies['midia_format'] == "mp4":
@@ -64,3 +64,14 @@ def pg_resp():
 
     else:
         return "{ Only 'GET' and 'POST methods are allowed ! }"
+
+@app_routes.route("/review", methods=['GET', 'POST'])
+def pg_review():
+    cookies = CookieService().get_all()
+    if not cookies['status']:
+        return redirect("/")
+    
+    if request.method == 'POST':
+        return redirect("/resp")
+
+    return render_template("pg_resposta.html", resp=cookies)

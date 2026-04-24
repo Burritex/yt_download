@@ -7,7 +7,7 @@ from typing import Optional
 class Midia:
     status: bool
     name: Optional[str] = None
-    midia_format: Optional[MidiaFormat] = None
+    midia_format: Optional[Enum] = None
     error_msg: Optional[str] = None
 
 

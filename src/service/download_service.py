@@ -43,7 +43,6 @@ class DownloadService:
 
     def get_midia(self, midia_format: MidiaFormat, url: str) -> Midia:
         config = self.format_config.get(midia_format)
-        _midia_name = ""
 
         if not config:
             return Midia(status=False, error_msg="⚠️ Formato inválido")
@@ -67,32 +66,12 @@ class DownloadService:
             ydl_opts["postprocessors"] = config["postprocessors"]
 
         try:
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                # 🔹 extrai info sem baixar
-                info = ydl.extract_info(url, download=False)
+            midia_exist = self._check_midia(ydl_opts, url, midia_format)
+            
+            if not midia_exist[0]:
+                self._download_midia(url, ydl_opts)
 
-                file_path = ydl.prepare_filename(info)
-
-                # se for áudio, ajusta extensão final
-                if midia_format == MidiaFormat.MUSIC:
-                    file_path = file_path.rsplit(".", 1)[0] + f".{midia_format.value}"
-
-                file_path = Path(file_path)
-                _midia_name = file_path.name
-
-                # 🔹 verifica se já existe
-                if file_path.exists():
-                    return Midia(
-                        status=True,
-                        name=_midia_name,
-                        midia_format = midia_format,
-                        error_msg="⚠️ Arquivo já existe, download ignorado."
-                    )
-                
-                # 🔹 realiza download
-                ydl.download([url])
-
-            return Midia(status=True, name=_midia_name, midia_format=midia_format)
+            return Midia(status=True, name=midia_exist[1], midia_format=midia_format) 
 
         except Exception as err:
             return Midia(
@@ -100,3 +79,25 @@ class DownloadService:
                 error_msg=f"❌ Erro ao baixar mídia: {err}"
             )
         
+    def _check_midia(self, ydl_opts, url, midia_format):
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            # 🔹 extrai info sem baixar
+            info = ydl.extract_info(url, download=False)
+            file_path = ydl.prepare_filename(info)
+
+            # se for áudio, ajusta extensão final
+            if midia_format == MidiaFormat.MUSIC:
+                file_path = file_path.rsplit(".", 1)[0] + f".{midia_format.value}"
+
+            file_path = Path(file_path)
+            _midia_name = file_path.name
+
+            # 🔹 verifica se já existe
+            if file_path.exists():
+                return True, _midia_name
+            else:
+                return False, _midia_name
+
+    def _download_midia(self, url, ydl_opts):
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
